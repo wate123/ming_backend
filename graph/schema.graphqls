@@ -1,6 +1,57 @@
 # GraphQL schema example
 #
 # https://gqlgen.com/getting-started/
+scalar Date
+
+type Invoice {
+    row_id: ID!
+    invno: String!
+    cust_type: String!
+    custphone: String!
+    invdate: Date!
+    invoicedat: String!
+    custno: String!
+    discount: String!
+    bal_ac: Float!
+    balance: Float!
+    texamount: Float!
+    totbev: Float!
+    paidm: Int!
+    timeset: String!
+    otime: String!
+    lunch: String!
+    server: String!
+    table_no: String!
+    no_person: String!
+    delivery: String!
+    mark: String!
+    checkprint: Int!
+    orderprint: Int!
+    tip: Float!
+    cash_paid: Float!
+    change_amt: Float!
+    stateno: String!
+    finished: String!
+    unsend: String!
+    service_ch: Float!
+    upstatus: Int!
+    discreatem: Float!
+    nontaxsale: String!
+    paidst: String!
+    vipno: String!
+    discbywho: String!
+    custname: String!
+    void: Int!
+    split: Int!
+    deltime: String!
+    lineprt: String!
+    batch: Int!
+    paytime: String!
+    onlines: Int!
+    cooked: Int!
+    mapmark: String!
+
+}
 
 type Todo {
   id: ID!

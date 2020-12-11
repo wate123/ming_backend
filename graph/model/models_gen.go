@@ -2,6 +2,55 @@
 
 package model
 
+type Invoice struct {
+	RowID      string  `json:"row_id"`
+	Invno      string  `json:"invno"`
+	CustType   string  `json:"cust_type"`
+	Custphone  string  `json:"custphone"`
+	Invdate    string  `json:"invdate"`
+	Invoicedat string  `json:"invoicedat"`
+	Custno     string  `json:"custno"`
+	Discount   string  `json:"discount"`
+	BalAc      float64 `json:"bal_ac"`
+	Balance    float64 `json:"balance"`
+	Texamount  float64 `json:"texamount"`
+	Totbev     float64 `json:"totbev"`
+	Paidm      int     `json:"paidm"`
+	Timeset    string  `json:"timeset"`
+	Otime      string  `json:"otime"`
+	Lunch      string  `json:"lunch"`
+	Server     string  `json:"server"`
+	TableNo    string  `json:"table_no"`
+	NoPerson   string  `json:"no_person"`
+	Delivery   string  `json:"delivery"`
+	Mark       string  `json:"mark"`
+	Checkprint int     `json:"checkprint"`
+	Orderprint int     `json:"orderprint"`
+	Tip        float64 `json:"tip"`
+	CashPaid   float64 `json:"cash_paid"`
+	ChangeAmt  float64 `json:"change_amt"`
+	Stateno    string  `json:"stateno"`
+	Finished   string  `json:"finished"`
+	Unsend     string  `json:"unsend"`
+	ServiceCh  float64 `json:"service_ch"`
+	Upstatus   int     `json:"upstatus"`
+	Discreatem float64 `json:"discreatem"`
+	Nontaxsale string  `json:"nontaxsale"`
+	Paidst     string  `json:"paidst"`
+	Vipno      string  `json:"vipno"`
+	Discbywho  string  `json:"discbywho"`
+	Custname   string  `json:"custname"`
+	Void       int     `json:"void"`
+	Split      int     `json:"split"`
+	Deltime    string  `json:"deltime"`
+	Lineprt    string  `json:"lineprt"`
+	Batch      int     `json:"batch"`
+	Paytime    string  `json:"paytime"`
+	Onlines    int     `json:"onlines"`
+	Cooked     int     `json:"cooked"`
+	Mapmark    string  `json:"mapmark"`
+}
+
 type NewTodo struct {
 	Text   string `json:"text"`
 	UserID string `json:"userId"`
