@@ -2,18 +2,19 @@ package main
 
 import (
 	"fmt"
+	//"github.com/go-sql-driver/mysql"
 	"log"
+	//mysql "ming_backend"
 	"ming_backend/graph"
 	"ming_backend/graph/generated"
 	"net/http"
 	"os"
 
-	"github.com/joho/godotenv"
-
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
-	"ming_backend/graph/model"
+	"github.com/joho/godotenv"
 )
 
 const defaultPort = "8080"
@@ -22,11 +23,12 @@ var db *gorm.DB
 
 func initDB() {
 	host := os.Getenv("DB_HOST")
-	ussername := os.Getenv("DB_USERNAME")
+	port := os.Getenv("DB_PORT")
+	username := os.Getenv("DB_USERNAME")
 	pass := os.Getenv("DB_PASSWORD")
-	db_name := os.Getenv("DB_NAME")
+	dbName := os.Getenv("DB_NAME")
 	var err error
-	dataSourceName := `root:@tcp(66.42.111.28:3306)/?parseTime=True`
+	dataSourceName := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=True", username, pass, host, port, dbName)
 	db, err = gorm.Open("mysql", dataSourceName)
 
 	if err != nil {
