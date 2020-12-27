@@ -1,7 +1,9 @@
+scalar Date
 type Invoice {
     invno: String!
     cust_type: String!
     custphone: String!
+    invdate: Date!
     invoicedat: String!
     custno: String!
     discount: Int!
@@ -49,6 +51,15 @@ type Invoice {
     note: String!
 }
 
+type SalesStats {
+    today: Float!
+    today_yesterday_diff: Float!
+    this_year_today_last_year_today_diff: Float!
+    total: Float!
+    profit: Float!
+}
+
 type Query{
     invoices: [Invoice!]!
+    getAllSalesStats: SalesStats!
 }

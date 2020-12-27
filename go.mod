@@ -4,7 +4,6 @@ go 1.15
 
 require (
 	github.com/99designs/gqlgen v0.13.0
-	github.com/go-sql-driver/mysql v1.5.0
 	github.com/joho/godotenv v1.3.0
 	github.com/mitchellh/mapstructure v1.1.2 // indirect
 	github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e // indirect

@@ -6,6 +6,7 @@ type Invoice struct {
 	Invno      string  `json:"invno"`
 	CustType   string  `json:"cust_type"`
 	Custphone  string  `json:"custphone"`
+	Invdate    string  `json:"invdate"`
 	Invoicedat string  `json:"invoicedat"`
 	Custno     string  `json:"custno"`
 	Discount   int     `json:"discount"`
@@ -51,4 +52,12 @@ type Invoice struct {
 	Cooked     int     `json:"cooked"`
 	Mapmark    string  `json:"mapmark"`
 	Note       string  `json:"note"`
+}
+
+type SalesStats struct {
+	Today                          float64 `json:"today"`
+	TodayYesterdayDiff             float64 `json:"today_yesterday_diff"`
+	ThisYearTodayLastYearTodayDiff float64 `json:"this_year_today_last_year_today_diff"`
+	Total                          float64 `json:"total"`
+	Profit                         float64 `json:"profit"`
 }
