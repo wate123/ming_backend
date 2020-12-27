@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
-	//"github.com/go-sql-driver/mysql"
+	"gorm.io/driver/mysql"
+	_ "gorm.io/driver/mysql"
 	"log"
-	//mysql "ming_backend"
 	"ming_backend/graph"
 	"ming_backend/graph/generated"
 	"net/http"
@@ -12,9 +12,9 @@ import (
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
-	_ "github.com/go-sql-driver/mysql"
-	"github.com/jinzhu/gorm"
+	//_ "github.com/go-sql-driver/mysql"
 	"github.com/joho/godotenv"
+	"gorm.io/gorm"
 )
 
 const defaultPort = "8080"
@@ -29,14 +29,12 @@ func initDB() {
 	dbName := os.Getenv("DB_NAME")
 	var err error
 	dataSourceName := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=True", username, pass, host, port, dbName)
-	db, err = gorm.Open("mysql", dataSourceName)
+	db, err = gorm.Open(mysql.Open(dataSourceName), &gorm.Config{})
 
 	if err != nil {
 		fmt.Println(err)
 		panic("failed to connect database")
 	}
-
-	db.LogMode(true)
 
 	//// Create the database. This is a one-time step.
 	//// Comment out if running multiple times - You may see an error otherwise
