@@ -1,4 +1,7 @@
 ./idea
+.idea
+.DS_Store
+docker
 # Binaries for programs and plugins
 *.exe
 *.exe~
