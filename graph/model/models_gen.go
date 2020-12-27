@@ -3,17 +3,18 @@
 package model
 
 type Invoice struct {
-	RowID      string  `json:"row_id"`
 	Invno      string  `json:"invno"`
 	CustType   string  `json:"cust_type"`
 	Custphone  string  `json:"custphone"`
-	Invdate    string  `json:"invdate"`
 	Invoicedat string  `json:"invoicedat"`
 	Custno     string  `json:"custno"`
-	Discount   string  `json:"discount"`
+	Discount   int     `json:"discount"`
+	Discamount float64 `json:"discamount"`
 	BalAc      float64 `json:"bal_ac"`
 	Balance    float64 `json:"balance"`
-	Texamount  float64 `json:"texamount"`
+	Taxamount  float64 `json:"taxamount"`
+	Subtotal   float64 `json:"subtotal"`
+	Totamount  float64 `json:"totamount"`
 	Totbev     float64 `json:"totbev"`
 	Paidm      int     `json:"paidm"`
 	Timeset    string  `json:"timeset"`
@@ -24,7 +25,7 @@ type Invoice struct {
 	NoPerson   string  `json:"no_person"`
 	Delivery   string  `json:"delivery"`
 	Mark       string  `json:"mark"`
-	Checkprint int     `json:"checkprint"`
+	Checkprint string  `json:"checkprint"`
 	Orderprint int     `json:"orderprint"`
 	Tip        float64 `json:"tip"`
 	CashPaid   float64 `json:"cash_paid"`
@@ -34,7 +35,7 @@ type Invoice struct {
 	Unsend     string  `json:"unsend"`
 	ServiceCh  float64 `json:"service_ch"`
 	Upstatus   int     `json:"upstatus"`
-	Discreatem float64 `json:"discreatem"`
+	Discrateam float64 `json:"discrateam"`
 	Nontaxsale string  `json:"nontaxsale"`
 	Paidst     string  `json:"paidst"`
 	Vipno      string  `json:"vipno"`
@@ -49,4 +50,5 @@ type Invoice struct {
 	Onlines    int     `json:"onlines"`
 	Cooked     int     `json:"cooked"`
 	Mapmark    string  `json:"mapmark"`
+	Note       string  `json:"note"`
 }

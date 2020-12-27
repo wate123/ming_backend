@@ -5,13 +5,14 @@ package graph
 
 import (
 	"context"
-	"fmt"
 	"ming_backend/graph/generated"
 	"ming_backend/graph/model"
 )
 
-func (r *queryResolver) Invoices(ctx context.Context) ([]*model.Invoice, error) {
-	panic(fmt.Errorf("not implemented"))
+func (r *queryResolver) Invoice(ctx context.Context) ([]*model.Invoice, error) {
+	var invoices []*model.Invoice
+	r.DB.Find(&invoices)
+	return invoices, nil
 }
 
 // Query returns generated.QueryResolver implementation.
@@ -25,10 +26,10 @@ type queryResolver struct{ *Resolver }
 //  - When renaming or deleting a resolver the old code will be put in here. You can safely delete
 //    it when you're done.
 //  - You have helper methods in this file. Move them out to keep these resolver files clean.
-//func (r *queryResolver) Invoice(ctx context.Context) ([]*model.Invoice, error) {
-//
-//	panic(r.invoices)
-//	return r.invoices, nil
-//}
+func (r *queryResolver) Invoices(ctx context.Context) ([]*model.Invoice, error) {
+	var invoices []*model.Invoice
+	r.DB.Find(&invoices)
+	return invoices, nil
+}
 
 type mutationResolver struct{ *Resolver }

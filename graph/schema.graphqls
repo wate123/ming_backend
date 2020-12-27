@@ -1,20 +1,16 @@
-# GraphQL schema example
-#
-# https://gqlgen.com/getting-started/
-scalar Date
-
 type Invoice {
-    row_id: ID!
     invno: String!
     cust_type: String!
     custphone: String!
-    invdate: Date!
     invoicedat: String!
     custno: String!
-    discount: String!
+    discount: Int!
+    discamount: Float!
     bal_ac: Float!
-    balance: Float!
-    texamount: Float!
+    balance:Float!
+    taxamount: Float!
+    subtotal: Float!
+    totamount: Float!
     totbev: Float!
     paidm: Int!
     timeset: String!
@@ -25,17 +21,17 @@ type Invoice {
     no_person: String!
     delivery: String!
     mark: String!
-    checkprint: Int!
+    checkprint: String!
     orderprint: Int!
     tip: Float!
-    cash_paid: Float!
+    cash_paid : Float!
     change_amt: Float!
     stateno: String!
     finished: String!
     unsend: String!
     service_ch: Float!
     upstatus: Int!
-    discreatem: Float!
+    discrateam: Float!
     nontaxsale: String!
     paidst: String!
     vipno: String!
@@ -50,7 +46,7 @@ type Invoice {
     onlines: Int!
     cooked: Int!
     mapmark: String!
-
+    note: String!
 }
 
 type Query{

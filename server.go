@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"gorm.io/driver/mysql"
 	_ "gorm.io/driver/mysql"
+	"gorm.io/gorm/schema"
 	"log"
 	"ming_backend/graph"
 	"ming_backend/graph/generated"
@@ -29,7 +30,11 @@ func initDB() {
 	dbName := os.Getenv("DB_NAME")
 	var err error
 	dataSourceName := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=True", username, pass, host, port, dbName)
-	db, err = gorm.Open(mysql.Open(dataSourceName), &gorm.Config{})
+	db, err = gorm.Open(mysql.Open(dataSourceName), &gorm.Config{
+		NamingStrategy: schema.NamingStrategy{
+			SingularTable: true,
+		},
+	})
 
 	if err != nil {
 		fmt.Println(err)
@@ -55,7 +60,7 @@ func main() {
 		port = defaultPort
 	}
 	initDB()
-	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{}}))
+	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{DB: db}}))
 
 	http.Handle("/", playground.Handler("GraphQL playground", "/query"))
 	http.Handle("/query", srv)

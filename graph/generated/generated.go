@@ -56,11 +56,11 @@ type ComplexityRoot struct {
 		Custphone  func(childComplexity int) int
 		Delivery   func(childComplexity int) int
 		Deltime    func(childComplexity int) int
+		Discamount func(childComplexity int) int
 		Discbywho  func(childComplexity int) int
 		Discount   func(childComplexity int) int
-		Discreatem func(childComplexity int) int
+		Discrateam func(childComplexity int) int
 		Finished   func(childComplexity int) int
-		Invdate    func(childComplexity int) int
 		Invno      func(childComplexity int) int
 		Invoicedat func(childComplexity int) int
 		Lineprt    func(childComplexity int) int
@@ -69,21 +69,23 @@ type ComplexityRoot struct {
 		Mark       func(childComplexity int) int
 		NoPerson   func(childComplexity int) int
 		Nontaxsale func(childComplexity int) int
+		Note       func(childComplexity int) int
 		Onlines    func(childComplexity int) int
 		Orderprint func(childComplexity int) int
 		Otime      func(childComplexity int) int
 		Paidm      func(childComplexity int) int
 		Paidst     func(childComplexity int) int
 		Paytime    func(childComplexity int) int
-		RowID      func(childComplexity int) int
 		Server     func(childComplexity int) int
 		ServiceCh  func(childComplexity int) int
 		Split      func(childComplexity int) int
 		Stateno    func(childComplexity int) int
+		Subtotal   func(childComplexity int) int
 		TableNo    func(childComplexity int) int
-		Texamount  func(childComplexity int) int
+		Taxamount  func(childComplexity int) int
 		Timeset    func(childComplexity int) int
 		Tip        func(childComplexity int) int
+		Totamount  func(childComplexity int) int
 		Totbev     func(childComplexity int) int
 		Unsend     func(childComplexity int) int
 		Upstatus   func(childComplexity int) int
@@ -92,12 +94,12 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
-		Invoices func(childComplexity int) int
+		Invoice func(childComplexity int) int
 	}
 }
 
 type QueryResolver interface {
-	Invoices(ctx context.Context) ([]*model.Invoice, error)
+	Invoice(ctx context.Context) ([]*model.Invoice, error)
 }
 
 type executableSchema struct {
@@ -206,6 +208,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Invoice.Deltime(childComplexity), true
 
+	case "Invoice.discamount":
+		if e.complexity.Invoice.Discamount == nil {
+			break
+		}
+
+		return e.complexity.Invoice.Discamount(childComplexity), true
+
 	case "Invoice.discbywho":
 		if e.complexity.Invoice.Discbywho == nil {
 			break
@@ -220,12 +229,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Invoice.Discount(childComplexity), true
 
-	case "Invoice.discreatem":
-		if e.complexity.Invoice.Discreatem == nil {
+	case "Invoice.discrateam":
+		if e.complexity.Invoice.Discrateam == nil {
 			break
 		}
 
-		return e.complexity.Invoice.Discreatem(childComplexity), true
+		return e.complexity.Invoice.Discrateam(childComplexity), true
 
 	case "Invoice.finished":
 		if e.complexity.Invoice.Finished == nil {
@@ -233,13 +242,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Invoice.Finished(childComplexity), true
-
-	case "Invoice.invdate":
-		if e.complexity.Invoice.Invdate == nil {
-			break
-		}
-
-		return e.complexity.Invoice.Invdate(childComplexity), true
 
 	case "Invoice.invno":
 		if e.complexity.Invoice.Invno == nil {
@@ -297,6 +299,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Invoice.Nontaxsale(childComplexity), true
 
+	case "Invoice.note":
+		if e.complexity.Invoice.Note == nil {
+			break
+		}
+
+		return e.complexity.Invoice.Note(childComplexity), true
+
 	case "Invoice.onlines":
 		if e.complexity.Invoice.Onlines == nil {
 			break
@@ -339,13 +348,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Invoice.Paytime(childComplexity), true
 
-	case "Invoice.row_id":
-		if e.complexity.Invoice.RowID == nil {
-			break
-		}
-
-		return e.complexity.Invoice.RowID(childComplexity), true
-
 	case "Invoice.server":
 		if e.complexity.Invoice.Server == nil {
 			break
@@ -374,6 +376,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Invoice.Stateno(childComplexity), true
 
+	case "Invoice.subtotal":
+		if e.complexity.Invoice.Subtotal == nil {
+			break
+		}
+
+		return e.complexity.Invoice.Subtotal(childComplexity), true
+
 	case "Invoice.table_no":
 		if e.complexity.Invoice.TableNo == nil {
 			break
@@ -381,12 +390,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Invoice.TableNo(childComplexity), true
 
-	case "Invoice.texamount":
-		if e.complexity.Invoice.Texamount == nil {
+	case "Invoice.taxamount":
+		if e.complexity.Invoice.Taxamount == nil {
 			break
 		}
 
-		return e.complexity.Invoice.Texamount(childComplexity), true
+		return e.complexity.Invoice.Taxamount(childComplexity), true
 
 	case "Invoice.timeset":
 		if e.complexity.Invoice.Timeset == nil {
@@ -401,6 +410,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Invoice.Tip(childComplexity), true
+
+	case "Invoice.totamount":
+		if e.complexity.Invoice.Totamount == nil {
+			break
+		}
+
+		return e.complexity.Invoice.Totamount(childComplexity), true
 
 	case "Invoice.totbev":
 		if e.complexity.Invoice.Totbev == nil {
@@ -437,12 +453,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Invoice.Void(childComplexity), true
 
-	case "Query.invoices":
-		if e.complexity.Query.Invoices == nil {
+	case "Query.invoice":
+		if e.complexity.Query.Invoice == nil {
 			break
 		}
 
-		return e.complexity.Query.Invoices(childComplexity), true
+		return e.complexity.Query.Invoice(childComplexity), true
 
 	}
 	return 0, false
@@ -494,23 +510,19 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 }
 
 var sources = []*ast.Source{
-	{Name: "graph/schema.graphqls", Input: `# GraphQL schema example
-#
-# https://gqlgen.com/getting-started/
-scalar Date
-
-type Invoice {
-    row_id: ID!
+	{Name: "graph/schema.graphqls", Input: `type Invoice {
     invno: String!
     cust_type: String!
     custphone: String!
-    invdate: Date!
     invoicedat: String!
     custno: String!
-    discount: String!
+    discount: Int!
+    discamount: Float!
     bal_ac: Float!
-    balance: Float!
-    texamount: Float!
+    balance:Float!
+    taxamount: Float!
+    subtotal: Float!
+    totamount: Float!
     totbev: Float!
     paidm: Int!
     timeset: String!
@@ -521,17 +533,17 @@ type Invoice {
     no_person: String!
     delivery: String!
     mark: String!
-    checkprint: Int!
+    checkprint: String!
     orderprint: Int!
     tip: Float!
-    cash_paid: Float!
+    cash_paid : Float!
     change_amt: Float!
     stateno: String!
     finished: String!
     unsend: String!
     service_ch: Float!
     upstatus: Int!
-    discreatem: Float!
+    discrateam: Float!
     nontaxsale: String!
     paidst: String!
     vipno: String!
@@ -546,11 +558,11 @@ type Invoice {
     onlines: Int!
     cooked: Int!
     mapmark: String!
-
+    note: String!
 }
 
 type Query{
-    invoices: [Invoice!]!
+    invoice: [Invoice!]!
 }`, BuiltIn: false},
 }
 var parsedSchema = gqlparser.MustLoadSchema(sources...)
@@ -611,41 +623,6 @@ func (ec *executionContext) field___Type_fields_args(ctx context.Context, rawArg
 // endregion ************************** directives.gotpl **************************
 
 // region    **************************** field.gotpl *****************************
-
-func (ec *executionContext) _Invoice_row_id(ctx context.Context, field graphql.CollectedField, obj *model.Invoice) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Invoice",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.RowID, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNID2string(ctx, field.Selections, res)
-}
 
 func (ec *executionContext) _Invoice_invno(ctx context.Context, field graphql.CollectedField, obj *model.Invoice) (ret graphql.Marshaler) {
 	defer func() {
@@ -752,41 +729,6 @@ func (ec *executionContext) _Invoice_custphone(ctx context.Context, field graphq
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Invoice_invdate(ctx context.Context, field graphql.CollectedField, obj *model.Invoice) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Invoice",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Invdate, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNDate2string(ctx, field.Selections, res)
-}
-
 func (ec *executionContext) _Invoice_invoicedat(ctx context.Context, field graphql.CollectedField, obj *model.Invoice) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -887,9 +829,44 @@ func (ec *executionContext) _Invoice_discount(ctx context.Context, field graphql
 		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(int)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Invoice_discamount(ctx context.Context, field graphql.CollectedField, obj *model.Invoice) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Invoice",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Discamount, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(float64)
+	fc.Result = res
+	return ec.marshalNFloat2float64(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Invoice_bal_ac(ctx context.Context, field graphql.CollectedField, obj *model.Invoice) (ret graphql.Marshaler) {
@@ -962,7 +939,7 @@ func (ec *executionContext) _Invoice_balance(ctx context.Context, field graphql.
 	return ec.marshalNFloat2float64(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Invoice_texamount(ctx context.Context, field graphql.CollectedField, obj *model.Invoice) (ret graphql.Marshaler) {
+func (ec *executionContext) _Invoice_taxamount(ctx context.Context, field graphql.CollectedField, obj *model.Invoice) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -980,7 +957,77 @@ func (ec *executionContext) _Invoice_texamount(ctx context.Context, field graphq
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Texamount, nil
+		return obj.Taxamount, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(float64)
+	fc.Result = res
+	return ec.marshalNFloat2float64(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Invoice_subtotal(ctx context.Context, field graphql.CollectedField, obj *model.Invoice) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Invoice",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Subtotal, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(float64)
+	fc.Result = res
+	return ec.marshalNFloat2float64(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Invoice_totamount(ctx context.Context, field graphql.CollectedField, obj *model.Invoice) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Invoice",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Totamount, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1377,9 +1424,9 @@ func (ec *executionContext) _Invoice_checkprint(ctx context.Context, field graph
 		}
 		return graphql.Null
 	}
-	res := resTmp.(int)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalNInt2int(ctx, field.Selections, res)
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Invoice_orderprint(ctx context.Context, field graphql.CollectedField, obj *model.Invoice) (ret graphql.Marshaler) {
@@ -1697,7 +1744,7 @@ func (ec *executionContext) _Invoice_upstatus(ctx context.Context, field graphql
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Invoice_discreatem(ctx context.Context, field graphql.CollectedField, obj *model.Invoice) (ret graphql.Marshaler) {
+func (ec *executionContext) _Invoice_discrateam(ctx context.Context, field graphql.CollectedField, obj *model.Invoice) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1715,7 +1762,7 @@ func (ec *executionContext) _Invoice_discreatem(ctx context.Context, field graph
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Discreatem, nil
+		return obj.Discrateam, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2222,7 +2269,42 @@ func (ec *executionContext) _Invoice_mapmark(ctx context.Context, field graphql.
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Query_invoices(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+func (ec *executionContext) _Invoice_note(ctx context.Context, field graphql.CollectedField, obj *model.Invoice) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Invoice",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Note, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_invoice(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -2240,7 +2322,7 @@ func (ec *executionContext) _Query_invoices(ctx context.Context, field graphql.C
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Invoices(rctx)
+		return ec.resolvers.Query().Invoice(rctx)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3434,11 +3516,6 @@ func (ec *executionContext) _Invoice(ctx context.Context, sel ast.SelectionSet, 
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Invoice")
-		case "row_id":
-			out.Values[i] = ec._Invoice_row_id(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		case "invno":
 			out.Values[i] = ec._Invoice_invno(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
@@ -3451,11 +3528,6 @@ func (ec *executionContext) _Invoice(ctx context.Context, sel ast.SelectionSet, 
 			}
 		case "custphone":
 			out.Values[i] = ec._Invoice_custphone(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "invdate":
-			out.Values[i] = ec._Invoice_invdate(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -3474,6 +3546,11 @@ func (ec *executionContext) _Invoice(ctx context.Context, sel ast.SelectionSet, 
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "discamount":
+			out.Values[i] = ec._Invoice_discamount(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		case "bal_ac":
 			out.Values[i] = ec._Invoice_bal_ac(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
@@ -3484,8 +3561,18 @@ func (ec *executionContext) _Invoice(ctx context.Context, sel ast.SelectionSet, 
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "texamount":
-			out.Values[i] = ec._Invoice_texamount(ctx, field, obj)
+		case "taxamount":
+			out.Values[i] = ec._Invoice_taxamount(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "subtotal":
+			out.Values[i] = ec._Invoice_subtotal(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "totamount":
+			out.Values[i] = ec._Invoice_totamount(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -3589,8 +3676,8 @@ func (ec *executionContext) _Invoice(ctx context.Context, sel ast.SelectionSet, 
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "discreatem":
-			out.Values[i] = ec._Invoice_discreatem(ctx, field, obj)
+		case "discrateam":
+			out.Values[i] = ec._Invoice_discrateam(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
@@ -3664,6 +3751,11 @@ func (ec *executionContext) _Invoice(ctx context.Context, sel ast.SelectionSet, 
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "note":
+			out.Values[i] = ec._Invoice_note(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -3690,7 +3782,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Query")
-		case "invoices":
+		case "invoice":
 			field := field
 			out.Concurrently(i, func() (res graphql.Marshaler) {
 				defer func() {
@@ -3698,7 +3790,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Query_invoices(ctx, field)
+				res = ec._Query_invoice(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -3979,21 +4071,6 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 	return res
 }
 
-func (ec *executionContext) unmarshalNDate2string(ctx context.Context, v interface{}) (string, error) {
-	res, err := graphql.UnmarshalString(v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalNDate2string(ctx context.Context, sel ast.SelectionSet, v string) graphql.Marshaler {
-	res := graphql.MarshalString(v)
-	if res == graphql.Null {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "must not be null")
-		}
-	}
-	return res
-}
-
 func (ec *executionContext) unmarshalNFloat2float64(ctx context.Context, v interface{}) (float64, error) {
 	res, err := graphql.UnmarshalFloat(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -4001,21 +4078,6 @@ func (ec *executionContext) unmarshalNFloat2float64(ctx context.Context, v inter
 
 func (ec *executionContext) marshalNFloat2float64(ctx context.Context, sel ast.SelectionSet, v float64) graphql.Marshaler {
 	res := graphql.MarshalFloat(v)
-	if res == graphql.Null {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "must not be null")
-		}
-	}
-	return res
-}
-
-func (ec *executionContext) unmarshalNID2string(ctx context.Context, v interface{}) (string, error) {
-	res, err := graphql.UnmarshalID(v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalNID2string(ctx context.Context, sel ast.SelectionSet, v string) graphql.Marshaler {
-	res := graphql.MarshalID(v)
 	if res == graphql.Null {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
