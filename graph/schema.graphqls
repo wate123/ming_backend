@@ -1,9 +1,10 @@
-scalar Date
+scalar Time
+
 type Invoice {
     invno: String!
     cust_type: String!
     custphone: String!
-    invdate: Date!
+    invdate: Time!
     invoicedat: String!
     custno: String!
     discount: Int!
@@ -59,7 +60,13 @@ type SalesStats {
     profit: Float!
 }
 
+input DateInput {
+    start: Time
+    end: Time
+}
+
 type Query{
     invoices: [Invoice!]!
     getAllSalesStats: SalesStats!
+    getSalesByDate(input: DateInput!): Float!
 }

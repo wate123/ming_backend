@@ -5,6 +5,8 @@ package graph
 
 import (
 	"context"
+	"fmt"
+	"log"
 	"ming_backend/graph/generated"
 	"ming_backend/graph/model"
 	"time"
@@ -36,6 +38,22 @@ func (r *queryResolver) GetAllSalesStats(ctx context.Context) (*model.SalesStats
 	saleStats.TodayYesterdayDiff = saleStats.Today - yesterday
 	saleStats.ThisYearTodayLastYearTodayDiff = saleStats.Today - lastYearToday
 	return &saleStats, nil
+}
+
+func (r *queryResolver) GetSalesByDate(ctx context.Context, input model.DateInput) (float64, error) {
+	var totalAmount float64
+	baseQuery := "SELECT sum(totamount) AS total_amount FROM invoice "
+	if input.Start == nil && input.End == nil {
+		log.Fatal("No start date or end date are given")
+	} else if input.Start != nil && input.End != nil {
+		r.DB.Raw(baseQuery + "WHERE invdate BETWEEN ? AND ?", input.Start, input.End).First(&totalAmount)
+	} else if input.Start != nil {
+		r.DB.Raw(baseQuery + "WHERE invdate >= ?", input.Start).First(&totalAmount)
+	} else {
+		r.DB.Raw(baseQuery + "WHERE invdate <= ?", input.End).First(&totalAmount)
+	}
+	fmt.Printf("Total Amount: %f\n", totalAmount)
+	return totalAmount, nil
 }
 
 // Query returns generated.QueryResolver implementation.
