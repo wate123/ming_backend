@@ -101,6 +101,11 @@ type ComplexityRoot struct {
 		Invoices         func(childComplexity int) int
 	}
 
+	SalesOverTime struct {
+		TimePoint   func(childComplexity int) int
+		TotalAmount func(childComplexity int) int
+	}
+
 	SalesStats struct {
 		Profit                         func(childComplexity int) int
 		ThisYearTodayLastYearTodayDiff func(childComplexity int) int
@@ -113,7 +118,7 @@ type ComplexityRoot struct {
 type QueryResolver interface {
 	Invoices(ctx context.Context) ([]*model.Invoice, error)
 	GetAllSalesStats(ctx context.Context) (*model.SalesStats, error)
-	GetSalesByDate(ctx context.Context, input model.DateInput) (float64, error)
+	GetSalesByDate(ctx context.Context, input model.DateInput) ([]*model.SalesOverTime, error)
 }
 
 type executableSchema struct {
@@ -500,6 +505,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.Invoices(childComplexity), true
 
+	case "SalesOverTime.time_point":
+		if e.complexity.SalesOverTime.TimePoint == nil {
+			break
+		}
+
+		return e.complexity.SalesOverTime.TimePoint(childComplexity), true
+
+	case "SalesOverTime.total_amount":
+		if e.complexity.SalesOverTime.TotalAmount == nil {
+			break
+		}
+
+		return e.complexity.SalesOverTime.TotalAmount(childComplexity), true
+
 	case "SalesStats.profit":
 		if e.complexity.SalesStats.Profit == nil {
 			break
@@ -647,15 +666,21 @@ type SalesStats {
     profit: Float!
 }
 
+type SalesOverTime {
+    time_point: Int!
+    total_amount: Float!
+}
+
 input DateInput {
     start: Time
     end: Time
+    range_by: String
 }
 
 type Query{
     invoices: [Invoice!]!
     getAllSalesStats: SalesStats!
-    getSalesByDate(input: DateInput!): Float!
+    getSalesByDate(input: DateInput!): [SalesOverTime]!
 }`, BuiltIn: false},
 }
 var parsedSchema = gqlparser.MustLoadSchema(sources...)
@@ -2554,9 +2579,9 @@ func (ec *executionContext) _Query_getSalesByDate(ctx context.Context, field gra
 		}
 		return graphql.Null
 	}
-	res := resTmp.(float64)
+	res := resTmp.([]*model.SalesOverTime)
 	fc.Result = res
-	return ec.marshalNFloat2float64(ctx, field.Selections, res)
+	return ec.marshalNSalesOverTime2ᚕᚖming_backendᚋgraphᚋmodelᚐSalesOverTime(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -2628,6 +2653,76 @@ func (ec *executionContext) _Query___schema(ctx context.Context, field graphql.C
 	res := resTmp.(*introspection.Schema)
 	fc.Result = res
 	return ec.marshalO__Schema2ᚖgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐSchema(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SalesOverTime_time_point(ctx context.Context, field graphql.CollectedField, obj *model.SalesOverTime) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SalesOverTime",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.TimePoint, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _SalesOverTime_total_amount(ctx context.Context, field graphql.CollectedField, obj *model.SalesOverTime) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SalesOverTime",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.TotalAmount, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(float64)
+	fc.Result = res
+	return ec.marshalNFloat2float64(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _SalesStats_today(ctx context.Context, field graphql.CollectedField, obj *model.SalesStats) (ret graphql.Marshaler) {
@@ -3914,6 +4009,14 @@ func (ec *executionContext) unmarshalInputDateInput(ctx context.Context, obj int
 			if err != nil {
 				return it, err
 			}
+		case "range_by":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("range_by"))
+			it.RangeBy, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
 		}
 	}
 
@@ -4256,6 +4359,38 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Values[i] = ec._Query___type(ctx, field)
 		case "__schema":
 			out.Values[i] = ec._Query___schema(ctx, field)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var salesOverTimeImplementors = []string{"SalesOverTime"}
+
+func (ec *executionContext) _SalesOverTime(ctx context.Context, sel ast.SelectionSet, obj *model.SalesOverTime) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, salesOverTimeImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("SalesOverTime")
+		case "time_point":
+			out.Values[i] = ec._SalesOverTime_time_point(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "total_amount":
+			out.Values[i] = ec._SalesOverTime_total_amount(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -4656,6 +4791,43 @@ func (ec *executionContext) marshalNInvoice2ᚖming_backendᚋgraphᚋmodelᚐIn
 	return ec._Invoice(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalNSalesOverTime2ᚕᚖming_backendᚋgraphᚋmodelᚐSalesOverTime(ctx context.Context, sel ast.SelectionSet, v []*model.SalesOverTime) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalOSalesOverTime2ᚖming_backendᚋgraphᚋmodelᚐSalesOverTime(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+	return ret
+}
+
 func (ec *executionContext) marshalNSalesStats2ming_backendᚋgraphᚋmodelᚐSalesStats(ctx context.Context, sel ast.SelectionSet, v model.SalesStats) graphql.Marshaler {
 	return ec._SalesStats(ctx, sel, &v)
 }
@@ -4951,6 +5123,13 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 		return graphql.Null
 	}
 	return graphql.MarshalBoolean(*v)
+}
+
+func (ec *executionContext) marshalOSalesOverTime2ᚖming_backendᚋgraphᚋmodelᚐSalesOverTime(ctx context.Context, sel ast.SelectionSet, v *model.SalesOverTime) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._SalesOverTime(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOString2string(ctx context.Context, v interface{}) (string, error) {

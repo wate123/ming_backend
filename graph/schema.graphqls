@@ -60,13 +60,19 @@ type SalesStats {
     profit: Float!
 }
 
+type SalesOverTime {
+    time_point: Int!
+    total_amount: Float!
+}
+
 input DateInput {
     start: Time
     end: Time
+    range_by: String
 }
 
 type Query{
     invoices: [Invoice!]!
     getAllSalesStats: SalesStats!
-    getSalesByDate(input: DateInput!): Float!
+    getSalesByDate(input: DateInput!): [SalesOverTime]!
 }

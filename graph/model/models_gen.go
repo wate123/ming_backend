@@ -7,8 +7,9 @@ import (
 )
 
 type DateInput struct {
-	Start *time.Time `json:"start"`
-	End   *time.Time `json:"end"`
+	Start   *time.Time `json:"start"`
+	End     *time.Time `json:"end"`
+	RangeBy *string    `json:"range_by"`
 }
 
 type Invoice struct {
@@ -61,6 +62,11 @@ type Invoice struct {
 	Cooked     int       `json:"cooked"`
 	Mapmark    string    `json:"mapmark"`
 	Note       string    `json:"note"`
+}
+
+type SalesOverTime struct {
+	TimePoint   int     `json:"time_point"`
+	TotalAmount float64 `json:"total_amount"`
 }
 
 type SalesStats struct {

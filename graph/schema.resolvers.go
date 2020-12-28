@@ -18,8 +18,6 @@ func (r *queryResolver) Invoices(ctx context.Context) ([]*model.Invoice, error) 
 	return invoices, nil
 }
 
-//TODO Profit
-//
 func (r *queryResolver) GetAllSalesStats(ctx context.Context) (*model.SalesStats, error) {
 	var saleStats model.SalesStats
 	var yesterday float64
@@ -40,20 +38,25 @@ func (r *queryResolver) GetAllSalesStats(ctx context.Context) (*model.SalesStats
 	return &saleStats, nil
 }
 
-func (r *queryResolver) GetSalesByDate(ctx context.Context, input model.DateInput) (float64, error) {
-	var totalAmount float64
-	baseQuery := "SELECT sum(totamount) AS total_amount FROM invoice "
+func (r *queryResolver) GetSalesByDate(ctx context.Context, input model.DateInput) ([]*model.SalesOverTime, error) {
+	var salesOverTime []*model.SalesOverTime
+	var rangeQuery = map[string]string{
+		"day":   "DAY(invdate)",
+		"week":  "WEEK(invdate)",
+		"month": "MONTH(invdate)",
+		"year":  "YEAR(invdate)"}
+	timeRange := rangeQuery[*input.RangeBy]
+	baseQuery := r.DB.Table("invoice").Select(fmt.Sprintf("%s AS time_point, SUM(totamount) AS total_amount", timeRange))
 	if input.Start == nil && input.End == nil {
 		log.Fatal("No start date or end date are given")
 	} else if input.Start != nil && input.End != nil {
-		r.DB.Raw(baseQuery + "WHERE invdate BETWEEN ? AND ?", input.Start, input.End).First(&totalAmount)
+		baseQuery.Where("invdate BETWEEN ? AND ?", input.Start, input.End).Group(timeRange).Find(&salesOverTime)
 	} else if input.Start != nil {
-		r.DB.Raw(baseQuery + "WHERE invdate >= ?", input.Start).First(&totalAmount)
+		baseQuery.Where("invdate >= ?", input.Start).Group(timeRange).Find(&salesOverTime)
 	} else {
-		r.DB.Raw(baseQuery + "WHERE invdate <= ?", input.End).First(&totalAmount)
+		baseQuery.Where("invdate <= ?", input.End).Group(timeRange).Find(&salesOverTime)
 	}
-	fmt.Printf("Total Amount: %f\n", totalAmount)
-	return totalAmount, nil
+	return salesOverTime, nil
 }
 
 // Query returns generated.QueryResolver implementation.
