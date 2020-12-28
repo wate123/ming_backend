@@ -5,9 +5,9 @@ package graph
 
 import (
 	"context"
-	"fmt"
 	"ming_backend/graph/generated"
 	"ming_backend/graph/model"
+	"time"
 )
 
 func (r *queryResolver) Invoices(ctx context.Context) ([]*model.Invoice, error) {
@@ -16,8 +16,26 @@ func (r *queryResolver) Invoices(ctx context.Context) ([]*model.Invoice, error) 
 	return invoices, nil
 }
 
+//TODO Profit
+//
 func (r *queryResolver) GetAllSalesStats(ctx context.Context) (*model.SalesStats, error) {
-	panic(fmt.Errorf("not implemented"))
+	var saleStats model.SalesStats
+	var yesterday float64
+	var lastYearToday float64
+	now := time.Now()
+	today := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, time.UTC)
+	r.DB.Table("invoice").Select("SUM(totamount)").Where("invdate = ?",
+		today).Scan(&saleStats.Today)
+	r.DB.Table("invoice").Select("SUM(totamount)").Where("invdate = ?",
+		today.AddDate(0, 0, -1)).Scan(&yesterday)
+
+	r.DB.Table("invoice").Select("SUM(totamount)").Where("invdate = ?",
+		today.AddDate(-1, 0, 0)).Scan(&lastYearToday)
+	r.DB.Table("invoice").Select("SUM(totamount)").Where("invdate BETWEEN ? AND ?",
+		time.Date(now.Year(), 1, 1, 0, 0, 0, 0, time.UTC), now).Scan(&saleStats.Total)
+	saleStats.TodayYesterdayDiff = saleStats.Today - yesterday
+	saleStats.ThisYearTodayLastYearTodayDiff = saleStats.Today - lastYearToday
+	return &saleStats, nil
 }
 
 // Query returns generated.QueryResolver implementation.
