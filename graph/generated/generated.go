@@ -96,9 +96,12 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
-		GetAllSalesStats func(childComplexity int) int
-		GetSalesByDate   func(childComplexity int, input model.DateInput) int
-		Invoices         func(childComplexity int) int
+		GetAllSalesStats      func(childComplexity int) int
+		GetSalesByDate        func(childComplexity int, input model.DateInput) int
+		GetSalesFromThisMonth func(childComplexity int) int
+		GetSalesFromThisWeek  func(childComplexity int) int
+		GetSalesFromThisYear  func(childComplexity int) int
+		Invoices              func(childComplexity int) int
 	}
 
 	SalesOverTime struct {
@@ -119,6 +122,9 @@ type QueryResolver interface {
 	Invoices(ctx context.Context) ([]*model.Invoice, error)
 	GetAllSalesStats(ctx context.Context) (*model.SalesStats, error)
 	GetSalesByDate(ctx context.Context, input model.DateInput) ([]*model.SalesOverTime, error)
+	GetSalesFromThisYear(ctx context.Context) ([]*model.SalesOverTime, error)
+	GetSalesFromThisMonth(ctx context.Context) ([]*model.SalesOverTime, error)
+	GetSalesFromThisWeek(ctx context.Context) ([]*model.SalesOverTime, error)
 }
 
 type executableSchema struct {
@@ -498,6 +504,27 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.GetSalesByDate(childComplexity, args["input"].(model.DateInput)), true
 
+	case "Query.getSalesFromThisMonth":
+		if e.complexity.Query.GetSalesFromThisMonth == nil {
+			break
+		}
+
+		return e.complexity.Query.GetSalesFromThisMonth(childComplexity), true
+
+	case "Query.getSalesFromThisWeek":
+		if e.complexity.Query.GetSalesFromThisWeek == nil {
+			break
+		}
+
+		return e.complexity.Query.GetSalesFromThisWeek(childComplexity), true
+
+	case "Query.getSalesFromThisYear":
+		if e.complexity.Query.GetSalesFromThisYear == nil {
+			break
+		}
+
+		return e.complexity.Query.GetSalesFromThisYear(childComplexity), true
+
 	case "Query.invoices":
 		if e.complexity.Query.Invoices == nil {
 			break
@@ -681,6 +708,9 @@ type Query{
     invoices: [Invoice!]!
     getAllSalesStats: SalesStats!
     getSalesByDate(input: DateInput!): [SalesOverTime]!
+    getSalesFromThisYear: [SalesOverTime]!
+    getSalesFromThisMonth: [SalesOverTime]!
+    getSalesFromThisWeek: [SalesOverTime]!
 }`, BuiltIn: false},
 }
 var parsedSchema = gqlparser.MustLoadSchema(sources...)
@@ -2584,6 +2614,111 @@ func (ec *executionContext) _Query_getSalesByDate(ctx context.Context, field gra
 	return ec.marshalNSalesOverTime2ᚕᚖming_backendᚋgraphᚋmodelᚐSalesOverTime(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _Query_getSalesFromThisYear(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().GetSalesFromThisYear(rctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*model.SalesOverTime)
+	fc.Result = res
+	return ec.marshalNSalesOverTime2ᚕᚖming_backendᚋgraphᚋmodelᚐSalesOverTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_getSalesFromThisMonth(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().GetSalesFromThisMonth(rctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*model.SalesOverTime)
+	fc.Result = res
+	return ec.marshalNSalesOverTime2ᚕᚖming_backendᚋgraphᚋmodelᚐSalesOverTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) _Query_getSalesFromThisWeek(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   true,
+		IsResolver: true,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().GetSalesFromThisWeek(rctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*model.SalesOverTime)
+	fc.Result = res
+	return ec.marshalNSalesOverTime2ᚕᚖming_backendᚋgraphᚋmodelᚐSalesOverTime(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -4350,6 +4485,48 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_getSalesByDate(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
+		case "getSalesFromThisYear":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_getSalesFromThisYear(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
+		case "getSalesFromThisMonth":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_getSalesFromThisMonth(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
+		case "getSalesFromThisWeek":
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_getSalesFromThisWeek(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}

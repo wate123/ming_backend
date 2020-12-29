@@ -75,4 +75,7 @@ type Query{
     invoices: [Invoice!]!
     getAllSalesStats: SalesStats!
     getSalesByDate(input: DateInput!): [SalesOverTime]!
+    getSalesFromThisYear: [SalesOverTime]!
+    getSalesFromThisMonth: [SalesOverTime]!
+    getSalesFromThisWeek: [SalesOverTime]!
 }
