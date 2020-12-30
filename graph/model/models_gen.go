@@ -6,12 +6,6 @@ import (
 	"time"
 )
 
-type DateInput struct {
-	Start   *time.Time `json:"start"`
-	End     *time.Time `json:"end"`
-	RangeBy *string    `json:"range_by"`
-}
-
 type Invoice struct {
 	Invno      string    `json:"invno"`
 	CustType   string    `json:"cust_type"`
@@ -62,6 +56,13 @@ type Invoice struct {
 	Cooked     int       `json:"cooked"`
 	Mapmark    string    `json:"mapmark"`
 	Note       string    `json:"note"`
+}
+
+type SalesInput struct {
+	Start   *time.Time `json:"start"`
+	End     *time.Time `json:"end"`
+	RangeBy *string    `json:"range_by"`
+	Type    *string    `json:"type"`
 }
 
 type SalesOverTime struct {

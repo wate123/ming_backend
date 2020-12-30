@@ -65,17 +65,18 @@ type SalesOverTime {
     total_amount: Float!
 }
 
-input DateInput {
+input SalesInput {
     start: Time
     end: Time
     range_by: String
+    type: String
 }
 
 type Query{
     invoices: [Invoice!]!
     getAllSalesStats: SalesStats!
-    getSalesByDate(input: DateInput!): [SalesOverTime]!
-    getSalesFromThisYear: [SalesOverTime]!
-    getSalesFromThisMonth: [SalesOverTime]!
-    getSalesFromThisWeek: [SalesOverTime]!
+    getSalesByDate(input: SalesInput!): [SalesOverTime]!
+    getSalesFromThisYear(input: String): [SalesOverTime]!
+    getSalesFromThisMonth(input: String): [SalesOverTime]!
+    getSalesFromThisWeek(input: String): [SalesOverTime]!
 }

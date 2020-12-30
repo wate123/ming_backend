@@ -97,10 +97,10 @@ type ComplexityRoot struct {
 
 	Query struct {
 		GetAllSalesStats      func(childComplexity int) int
-		GetSalesByDate        func(childComplexity int, input model.DateInput) int
-		GetSalesFromThisMonth func(childComplexity int) int
-		GetSalesFromThisWeek  func(childComplexity int) int
-		GetSalesFromThisYear  func(childComplexity int) int
+		GetSalesByDate        func(childComplexity int, input model.SalesInput) int
+		GetSalesFromThisMonth func(childComplexity int, input *string) int
+		GetSalesFromThisWeek  func(childComplexity int, input *string) int
+		GetSalesFromThisYear  func(childComplexity int, input *string) int
 		Invoices              func(childComplexity int) int
 	}
 
@@ -121,10 +121,10 @@ type ComplexityRoot struct {
 type QueryResolver interface {
 	Invoices(ctx context.Context) ([]*model.Invoice, error)
 	GetAllSalesStats(ctx context.Context) (*model.SalesStats, error)
-	GetSalesByDate(ctx context.Context, input model.DateInput) ([]*model.SalesOverTime, error)
-	GetSalesFromThisYear(ctx context.Context) ([]*model.SalesOverTime, error)
-	GetSalesFromThisMonth(ctx context.Context) ([]*model.SalesOverTime, error)
-	GetSalesFromThisWeek(ctx context.Context) ([]*model.SalesOverTime, error)
+	GetSalesByDate(ctx context.Context, input model.SalesInput) ([]*model.SalesOverTime, error)
+	GetSalesFromThisYear(ctx context.Context, input *string) ([]*model.SalesOverTime, error)
+	GetSalesFromThisMonth(ctx context.Context, input *string) ([]*model.SalesOverTime, error)
+	GetSalesFromThisWeek(ctx context.Context, input *string) ([]*model.SalesOverTime, error)
 }
 
 type executableSchema struct {
@@ -502,28 +502,43 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.GetSalesByDate(childComplexity, args["input"].(model.DateInput)), true
+		return e.complexity.Query.GetSalesByDate(childComplexity, args["input"].(model.SalesInput)), true
 
 	case "Query.getSalesFromThisMonth":
 		if e.complexity.Query.GetSalesFromThisMonth == nil {
 			break
 		}
 
-		return e.complexity.Query.GetSalesFromThisMonth(childComplexity), true
+		args, err := ec.field_Query_getSalesFromThisMonth_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.GetSalesFromThisMonth(childComplexity, args["input"].(*string)), true
 
 	case "Query.getSalesFromThisWeek":
 		if e.complexity.Query.GetSalesFromThisWeek == nil {
 			break
 		}
 
-		return e.complexity.Query.GetSalesFromThisWeek(childComplexity), true
+		args, err := ec.field_Query_getSalesFromThisWeek_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.GetSalesFromThisWeek(childComplexity, args["input"].(*string)), true
 
 	case "Query.getSalesFromThisYear":
 		if e.complexity.Query.GetSalesFromThisYear == nil {
 			break
 		}
 
-		return e.complexity.Query.GetSalesFromThisYear(childComplexity), true
+		args, err := ec.field_Query_getSalesFromThisYear_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.GetSalesFromThisYear(childComplexity, args["input"].(*string)), true
 
 	case "Query.invoices":
 		if e.complexity.Query.Invoices == nil {
@@ -698,19 +713,20 @@ type SalesOverTime {
     total_amount: Float!
 }
 
-input DateInput {
+input SalesInput {
     start: Time
     end: Time
     range_by: String
+    type: String
 }
 
 type Query{
     invoices: [Invoice!]!
     getAllSalesStats: SalesStats!
-    getSalesByDate(input: DateInput!): [SalesOverTime]!
-    getSalesFromThisYear: [SalesOverTime]!
-    getSalesFromThisMonth: [SalesOverTime]!
-    getSalesFromThisWeek: [SalesOverTime]!
+    getSalesByDate(input: SalesInput!): [SalesOverTime]!
+    getSalesFromThisYear(input: String): [SalesOverTime]!
+    getSalesFromThisMonth(input: String): [SalesOverTime]!
+    getSalesFromThisWeek(input: String): [SalesOverTime]!
 }`, BuiltIn: false},
 }
 var parsedSchema = gqlparser.MustLoadSchema(sources...)
@@ -737,10 +753,55 @@ func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs
 func (ec *executionContext) field_Query_getSalesByDate_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 model.DateInput
+	var arg0 model.SalesInput
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNDateInput2ming_backendᚋgraphᚋmodelᚐDateInput(ctx, tmp)
+		arg0, err = ec.unmarshalNSalesInput2ming_backendᚋgraphᚋmodelᚐSalesInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_getSalesFromThisMonth_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *string
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_getSalesFromThisWeek_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *string
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_getSalesFromThisYear_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *string
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -2597,7 +2658,7 @@ func (ec *executionContext) _Query_getSalesByDate(ctx context.Context, field gra
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().GetSalesByDate(rctx, args["input"].(model.DateInput))
+		return ec.resolvers.Query().GetSalesByDate(rctx, args["input"].(model.SalesInput))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2630,9 +2691,16 @@ func (ec *executionContext) _Query_getSalesFromThisYear(ctx context.Context, fie
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_getSalesFromThisYear_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().GetSalesFromThisYear(rctx)
+		return ec.resolvers.Query().GetSalesFromThisYear(rctx, args["input"].(*string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2665,9 +2733,16 @@ func (ec *executionContext) _Query_getSalesFromThisMonth(ctx context.Context, fi
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_getSalesFromThisMonth_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().GetSalesFromThisMonth(rctx)
+		return ec.resolvers.Query().GetSalesFromThisMonth(rctx, args["input"].(*string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2700,9 +2775,16 @@ func (ec *executionContext) _Query_getSalesFromThisWeek(ctx context.Context, fie
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_getSalesFromThisWeek_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().GetSalesFromThisWeek(rctx)
+		return ec.resolvers.Query().GetSalesFromThisWeek(rctx, args["input"].(*string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4122,8 +4204,8 @@ func (ec *executionContext) ___Type_ofType(ctx context.Context, field graphql.Co
 
 // region    **************************** input.gotpl *****************************
 
-func (ec *executionContext) unmarshalInputDateInput(ctx context.Context, obj interface{}) (model.DateInput, error) {
-	var it model.DateInput
+func (ec *executionContext) unmarshalInputSalesInput(ctx context.Context, obj interface{}) (model.SalesInput, error) {
+	var it model.SalesInput
 	var asMap = obj.(map[string]interface{})
 
 	for k, v := range asMap {
@@ -4149,6 +4231,14 @@ func (ec *executionContext) unmarshalInputDateInput(ctx context.Context, obj int
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("range_by"))
 			it.RangeBy, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "type":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("type"))
+			it.Type, err = ec.unmarshalOString2ᚖstring(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -4886,11 +4976,6 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 	return res
 }
 
-func (ec *executionContext) unmarshalNDateInput2ming_backendᚋgraphᚋmodelᚐDateInput(ctx context.Context, v interface{}) (model.DateInput, error) {
-	res, err := ec.unmarshalInputDateInput(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
 func (ec *executionContext) unmarshalNFloat2float64(ctx context.Context, v interface{}) (float64, error) {
 	res, err := graphql.UnmarshalFloat(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -4966,6 +5051,11 @@ func (ec *executionContext) marshalNInvoice2ᚖming_backendᚋgraphᚋmodelᚐIn
 		return graphql.Null
 	}
 	return ec._Invoice(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNSalesInput2ming_backendᚋgraphᚋmodelᚐSalesInput(ctx context.Context, v interface{}) (model.SalesInput, error) {
+	res, err := ec.unmarshalInputSalesInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalNSalesOverTime2ᚕᚖming_backendᚋgraphᚋmodelᚐSalesOverTime(ctx context.Context, sel ast.SelectionSet, v []*model.SalesOverTime) graphql.Marshaler {
