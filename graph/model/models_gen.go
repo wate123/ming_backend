@@ -66,9 +66,9 @@ type SalesInput struct {
 }
 
 type SalesOverTime struct {
-	TimePoint    int       `json:"time_point"`
-	CompleteDate time.Time `json:"complete_date"`
-	TotalAmount  float64   `json:"total_amount"`
+	TimePoint   int       `json:"time_point"`
+	StartDate   time.Time `json:"start_date"`
+	TotalAmount float64   `json:"total_amount"`
 }
 
 type SalesStats struct {

@@ -62,7 +62,7 @@ type SalesStats {
 
 type SalesOverTime {
     time_point: Int!
-    complete_date: Time!
+    start_date: Time!
     total_amount: Float!
 }
 

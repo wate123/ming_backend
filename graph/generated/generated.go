@@ -105,9 +105,9 @@ type ComplexityRoot struct {
 	}
 
 	SalesOverTime struct {
-		CompleteDate func(childComplexity int) int
-		TimePoint    func(childComplexity int) int
-		TotalAmount  func(childComplexity int) int
+		StartDate   func(childComplexity int) int
+		TimePoint   func(childComplexity int) int
+		TotalAmount func(childComplexity int) int
 	}
 
 	SalesStats struct {
@@ -548,12 +548,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.Invoices(childComplexity), true
 
-	case "SalesOverTime.complete_date":
-		if e.complexity.SalesOverTime.CompleteDate == nil {
+	case "SalesOverTime.start_date":
+		if e.complexity.SalesOverTime.StartDate == nil {
 			break
 		}
 
-		return e.complexity.SalesOverTime.CompleteDate(childComplexity), true
+		return e.complexity.SalesOverTime.StartDate(childComplexity), true
 
 	case "SalesOverTime.time_point":
 		if e.complexity.SalesOverTime.TimePoint == nil {
@@ -718,7 +718,7 @@ type SalesStats {
 
 type SalesOverTime {
     time_point: Int!
-    complete_date: Time!
+    start_date: Time!
     total_amount: Float!
 }
 
@@ -2916,7 +2916,7 @@ func (ec *executionContext) _SalesOverTime_time_point(ctx context.Context, field
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _SalesOverTime_complete_date(ctx context.Context, field graphql.CollectedField, obj *model.SalesOverTime) (ret graphql.Marshaler) {
+func (ec *executionContext) _SalesOverTime_start_date(ctx context.Context, field graphql.CollectedField, obj *model.SalesOverTime) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -2934,7 +2934,7 @@ func (ec *executionContext) _SalesOverTime_complete_date(ctx context.Context, fi
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.CompleteDate, nil
+		return obj.StartDate, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -4697,8 +4697,8 @@ func (ec *executionContext) _SalesOverTime(ctx context.Context, sel ast.Selectio
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "complete_date":
-			out.Values[i] = ec._SalesOverTime_complete_date(ctx, field, obj)
+		case "start_date":
+			out.Values[i] = ec._SalesOverTime_start_date(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
