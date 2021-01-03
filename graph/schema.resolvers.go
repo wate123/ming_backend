@@ -48,7 +48,8 @@ func (r *queryResolver) GetSalesByDate(ctx context.Context, input model.SalesInp
 	if input.Type != nil {
 		orderType = fmt.Sprintf("%%%s%%", *input.Type) // escape %, format orderType as %pattern%
 	}
-	query := r.DB.Table("invoice").Select(fmt.Sprintf("%s AS time_point, SUM(totamount) AS total_amount", timeRange))
+	query := r.DB.Table("invoice").Select(
+		fmt.Sprintf("%s AS time_point, invdate AS complete_date, SUM(totamount) AS total_amount", timeRange))
 	if input.Start == nil && input.End == nil {
 		log.Fatal("No start date or end date are given")
 	} else if input.Start != nil && input.End != nil {
@@ -58,7 +59,7 @@ func (r *queryResolver) GetSalesByDate(ctx context.Context, input model.SalesInp
 	} else {
 		query = query.Where("custphone LIKE ? AND invdate <= ?", orderType, input.End)
 	}
-	query.Group(timeRange).Find(&salesOverTime)
+	query.Group(timeRange).Order("invdate").Find(&salesOverTime)
 	return salesOverTime, nil
 }
 

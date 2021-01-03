@@ -105,8 +105,9 @@ type ComplexityRoot struct {
 	}
 
 	SalesOverTime struct {
-		TimePoint   func(childComplexity int) int
-		TotalAmount func(childComplexity int) int
+		CompleteDate func(childComplexity int) int
+		TimePoint    func(childComplexity int) int
+		TotalAmount  func(childComplexity int) int
 	}
 
 	SalesStats struct {
@@ -547,6 +548,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.Invoices(childComplexity), true
 
+	case "SalesOverTime.complete_date":
+		if e.complexity.SalesOverTime.CompleteDate == nil {
+			break
+		}
+
+		return e.complexity.SalesOverTime.CompleteDate(childComplexity), true
+
 	case "SalesOverTime.time_point":
 		if e.complexity.SalesOverTime.TimePoint == nil {
 			break
@@ -710,6 +718,7 @@ type SalesStats {
 
 type SalesOverTime {
     time_point: Int!
+    complete_date: Time!
     total_amount: Float!
 }
 
@@ -2907,6 +2916,41 @@ func (ec *executionContext) _SalesOverTime_time_point(ctx context.Context, field
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
+func (ec *executionContext) _SalesOverTime_complete_date(ctx context.Context, field graphql.CollectedField, obj *model.SalesOverTime) (ret graphql.Marshaler) {
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	fc := &graphql.FieldContext{
+		Object:     "SalesOverTime",
+		Field:      field,
+		Args:       nil,
+		IsMethod:   false,
+		IsResolver: false,
+	}
+
+	ctx = graphql.WithFieldContext(ctx, fc)
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CompleteDate, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(time.Time)
+	fc.Result = res
+	return ec.marshalNTime2timeᚐTime(ctx, field.Selections, res)
+}
+
 func (ec *executionContext) _SalesOverTime_total_amount(ctx context.Context, field graphql.CollectedField, obj *model.SalesOverTime) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
@@ -4650,6 +4694,11 @@ func (ec *executionContext) _SalesOverTime(ctx context.Context, sel ast.Selectio
 			out.Values[i] = graphql.MarshalString("SalesOverTime")
 		case "time_point":
 			out.Values[i] = ec._SalesOverTime_time_point(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "complete_date":
+			out.Values[i] = ec._SalesOverTime_complete_date(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
