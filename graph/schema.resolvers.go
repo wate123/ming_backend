@@ -78,10 +78,10 @@ func (r *queryResolver) GetSalesFromThisMonth(ctx context.Context, input *string
 }
 
 func (r *queryResolver) GetSalesFromThisWeek(ctx context.Context, input *string) ([]*model.SalesOverTime, error) {
-	t := time.Now()
-	_, thisWeek := isoweek.FromDate(t.Year(), t.Month(), t.Day())
-	firstDayThisWeek := isoweek.StartTime(t.Year(), thisWeek, time.UTC)
+	year, week := time.Now().ISOWeek()
+	firstDayThisWeek := isoweek.StartTime(year, week, time.UTC)
 	rangeBy := "day"
+	fmt.Print(firstDayThisWeek)
 	return r.GetSalesByDate(ctx, model.SalesInput{Start: &firstDayThisWeek, RangeBy: &rangeBy, Type: input})
 }
 
